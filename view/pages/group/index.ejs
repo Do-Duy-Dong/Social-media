@@ -1,0 +1,42 @@
+<%- contentFor('body') %>
+<%- include('../../layouts/sidebar-group.ejs') %>
+<div class="content col-10">
+    <div class="header">
+        <div class="user-section">
+            <div class="item" style="border-right: 1px solid #999;padding-right: 10px;">
+                <i class="fa fa-user" aria-hidden="true"></i>
+                <span>Nhóm</span>
+            </div>
+             <a class="btn btn-danger" role="button" onclick="showCreateGr()">Thêm nhóm</a>
+        </div>
+        
+    </div>
+
+    <div class="row box-content">
+
+        <div class="chat-area">
+
+            <div class="chat-content">
+                
+                
+                <!-- <form action="<%= home%>/discord/friend" form-add-friend my_id="<%= user._id%>">
+                <div class="search-container add-friend-container">
+                    
+                        <input type="text" placeholder="Search friends" class="search-input add-friend">
+                        <button type="submit" class="button-friend"> 
+                            <span>Search</span>
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </form> -->
+
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Thông tin hội thoại --> 
+    </div>
+    <%- include('../mixins/createGr.ejs')%>
+

@@ -1,0 +1,49 @@
+<%- contentFor('body') %>
+<%- include('../../layouts/header') %>
+<div class="content col-10">
+    <%- include('../../layouts/header-af.ejs') %>
+    <div class="row box-content">
+
+        <div class="chat-area">
+
+            <div class="chat-content friend-pending">
+                <% record.forEach((item,index)=>{ %>
+                    <div class="friend-item" user-send-request="<%= item._id%>">
+                        <div class="row">
+                            <i class="fa fa-user col-1" aria-hidden="true"></i>
+                            <div class="friend-name col-9">
+                                <div class="" style="font-size: 1.1rem;color: white;;"><%= item.fullName%></div>
+                                <div class="" style="font-size: 0.9rem;">Offline</div>
+                            </div>
+                            <div class="col-2" style="
+                            display: flex;
+                            justify-content: space-evenly;
+                            text-align: center;
+                            align-items: center;
+                            
+                        ">
+
+                                <a role="button" class="circle-back" onclick="acceptFr()">
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                </a>
+                                <a href="" class="circle-back" onclick="refuseFr()">
+                                    <i class="fa fa-times" aria-hidden="true"></i>                                </a>
+    
+                            </div>
+                        </div>
+                    </div>
+                
+
+
+                    <%})%>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- Thông tin hội thoại -->
+        
+    </div>
+    <!-- <script src="/scriptjs/friend.js"></script> -->
+
