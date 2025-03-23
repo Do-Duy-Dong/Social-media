@@ -1,5 +1,6 @@
 
 import { FileUploadWithPreview } from 'https://unpkg.com/file-upload-with-preview/dist/index.js';
+import path from 'path';
 
 let custom = document.querySelector('.custom-file-container');
 if (custom) {
@@ -11,9 +12,15 @@ if (custom) {
 }
 
 const socket = io();
-const chatSocket = io("/chat");
-const friendSocket = io("/friend");
-const onlineSocket = io("/online");
+const chatSocket = io("/chat",{
+    path:"/socket.io"
+});
+const friendSocket = io("/friend",{
+    path:"/socket.io"
+});
+const onlineSocket = io("/online",{
+    path:"/socket.io"
+});
 const formChat = document.querySelector("[form-chat]");
 const my_id = document.querySelector("[user_id]").getAttribute('user_id');
 var room_div = document.querySelector("[room-id]");

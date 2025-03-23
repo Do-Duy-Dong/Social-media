@@ -4,16 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.ts",
+    "start": "nodemon dist/index.js",
+    "dev": "nodemon index.ts",
     "build":"tsc && node copy-dir.js",
     "ts-check":"tsc --project tsconfig.json",
     "add-build":"git add dist"
   },
-  "pre-commit":[
-    "ts-check",
-    "build", 
-    "add-build"
-  ],
   "author": "",
   "license": "ISC",
   "description": "",
