@@ -7,7 +7,6 @@
             </div>
 
             <div class="icon-section">
-                <i class="fa fa-phone"></i>
                 <div class="avatar" role="button" onclick="showDropdown()">
                     <%if(user.avatar){%>
                         <img src="<%= user.avatar%>" class="img-profile">
@@ -17,8 +16,8 @@
                           <%}%>
                 </div>
                 <div class="dropdown-box" hidden>
-                    <a class="profile-div" href="<%= home%>/home/profile">Hồ sơ</a>
-                    <a class="logout" href="<%= home%>/user/logout">Đăng xuất</a>
+                    <a class="profile-div" href="<%= home%>/home/profile">Profile</a>
+                    <a class="logout" href="<%= home%>/user/logout">Logout</a>
                 </div>
     
                 
@@ -33,8 +32,7 @@
                 <div class="chat-content title-home" >
                     
                         <i class="fa fa-snapchat-ghost" aria-hidden="true"></i>
-                    <p>Chào mừng 
-                    bạn đến với Snap</p>
+                    <p>Welcome to Snap</p>
                 
                     
                 </div>

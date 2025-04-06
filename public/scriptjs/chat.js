@@ -1,6 +1,5 @@
 
 import { FileUploadWithPreview } from 'https://unpkg.com/file-upload-with-preview/dist/index.js';
-import path from 'path';
 
 let custom = document.querySelector('.custom-file-container');
 if (custom) {
@@ -10,23 +9,25 @@ if (custom) {
     });
 
 }
-
+// social-media-production-18eb.up.railway.app
 const socket = io();
-const chatSocket = io("/chat",{
-    path:"/socket.io"
-});
-const friendSocket = io("/friend",{
-    path:"/socket.io"
-});
-const onlineSocket = io("/online",{
-    path:"/socket.io"
-});
+const chatSocket = io("/chat");
+const friendSocket = io("/friend");
+const onlineSocket = io("/online");
+const notificationSocket= io("/notification");
 const formChat = document.querySelector("[form-chat]");
 const my_id = document.querySelector("[user_id]").getAttribute('user_id');
+const user2_id= document.querySelector('[user2_id]');
 var room_div = document.querySelector("[room-id]");
 
+notificationSocket.emit('join',{
+    room:my_id
+});
 if (formChat) {
     var room_id = room_div.getAttribute("room-id");
+    var user2Id='';
+    if(user2_id) user2Id= user2_id.getAttribute('user2_id');
+    
     chatSocket.emit("join", {
         room: room_id
     })
@@ -35,7 +36,6 @@ if (formChat) {
         const input = document.getElementById("input-chat");
         const value = input.value;
         const imgs = window.upload.cachedFileArray;
-        console.log(imgs);
         input.value = "";
         try {
             const myNameDiv= document.querySelector('[myName]');
@@ -47,9 +47,11 @@ if (formChat) {
                 msg: value,
                 img: imgs,
                 sender: my_id,
+                receiver:user2Id,
                 myName:myName,
                 room_id: room_id
             });
+            
 
         } catch (error) {
             console.log(error);
@@ -107,8 +109,19 @@ chatSocket.on("server-send-back", data => {
         messageChat.appendChild(div2);
         window.upload.resetPreviewPanel();
     }
+    
 })
-
+notificationSocket.on('server-send-notice',data=>{
+    console.log('notice')
+    const div=document.querySelector(`[roomIdHeader="${data.room_id}"]`);
+    const parent= document.querySelector('.parent-chat');
+    if(div){
+        parent.prepend(div);
+        const div1=document.createElement('div');
+        div1.classList.add('circle-unread');
+        div.appendChild(div1);
+    }
+})
 
 // add friend Socket(socket.on luôn hoạt động ở mọi route)-> tối ưu đưa socket vào controller addFr sau
 window.addFr = function () {
@@ -303,6 +316,7 @@ onlineSocket.on("userOnline", data => {
             if (!divExist) {
                 const body = document.createElement("div");
                 body.classList.add("friend-item");
+                
                 body.innerHTML = `
                     <div class="row" user_id="${onlineFr._id}">
                             <i class="fa fa-user col-1" aria-hidden="true"></i>
@@ -317,13 +331,7 @@ onlineSocket.on("userOnline", data => {
                             align-items: center;
                             
                             ">
-                                <a class="circle-back" role="button" onclick="chatFr('<%= item._id%>,'<%= home%>'')">
-                                    <i class="fa fa-comment" aria-hidden="true" ></i>
-
-                                </a>
-                                <a class="circle-back">
-                                    <i class="fa fa-ellipsis-v " aria-hidden="true"></i>
-                                </a>
+                                
 
                             </div>
                         </div>
@@ -338,3 +346,38 @@ onlineSocket.on("userOnline", data => {
         }
     });
 })
+
+
+// `<div class="friend-item-inviteGr" style="border-top: 1px solid #454545;" user-friend-all="${onlineFr._id}">
+//                                     <div class="friend-info col-9" friend-invite-group>
+//                                         <div class="avatar">
+                                            
+//                                                 <img src="<%= onlineFr.avatar%>" class="img-profile">
+//                                                 <div class="status-indicator2"></div>
+//                                         </div>
+//                                         <div class="" style="font-size: 1.1rem;color: white;;">
+//                                             <span>
+//                                                 ${onlineFr.fullName}
+//                                             </span>
+//                                             <div class="statusFr" style="font-size: 0.9rem;color: #999;">Online</div>
+//                                         </div>
+                                        
+//                                     </div>
+//                                     <div class="col-2" style="
+//                                                     display: flex;
+//                                                     justify-content: space-evenly;
+//                                                     text-align: center;
+//                                                     align-items: center;
+                                                    
+//                                                 ">
+//                                             <a class="circle-back" role="button"
+//                                                 onclick="chatFr('<%= item._id%>','<%= home%>')">
+//                                                 <i class="fa fa-comment " aria-hidden="true"></i>
+
+//                                             </a>
+//                                             <a class="circle-back" role="button" onclick="deleteFriend()">
+//                                                 <i class="fa fa-user-times" aria-hidden="true"></i>
+//                                             </a>
+
+//                                         </div>
+//                                 </div>`

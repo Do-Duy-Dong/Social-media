@@ -9,7 +9,12 @@ const roomSchema= new mongoose.Schema({
             user_id:String,
             fullName:String
         }
-    ]
+    ],
+    lastMess:{
+        sender:String,
+        another_read:Boolean,
+        updateAt:Date
+    }
     ,
     status:{
         type:String,

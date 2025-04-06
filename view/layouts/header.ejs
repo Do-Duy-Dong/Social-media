@@ -25,15 +25,11 @@
                     <span>Groups</span>
                 </div>
             </a>
-            <span>Tin nhan truc tiep</span>
+            <span>List of chats</span>
+            <div class="parent-chat">
             <% for(let item of room) { %>
-                <!-- <a class="friend-item sidebar-item" href="<%= home %>/chat/roomChat/<%= item.room_id%>">
-                    <div class="item" >
-                        <i class="fa fa-user" aria-hidden="true"></i>
-                        <span><%= item.fullName %></span>
-                    </div>
-                </a> -->
-                <a class="friend-item-inviteGr" href="<%= home %>/chat/roomChat/<%= item.room_id%>">
+                
+                <a class="friend-item-inviteGr" href="<%= home %>/chat/roomChat/<%= item._id%>" roomIdHeader="<%= item._id%>">
                     <div class="friend-info" friend-invite-group>
                         <div class="avatar">
                             <%if(item.avatar){%>
@@ -42,15 +38,21 @@
                                     <svg class="discord-logo" viewBox="0 0 24 24">
                                     </svg>
                                   <%}%>
-                                  <div class="status-indicator2" ></div>
+                                  
                         </div>
                         <span class="username">
                             <%= item.fullName%>
                         </span>
+                        <%if(!item.lastMess.another_read && item.lastMess.sender!=user._id){%>
+                            <div class="circle-unread"></div>
+
+                              <%}%>
+                        
                     </div>
             
                 </a>
                 <% } %>
         </div>
+    </div>
    
 </div>

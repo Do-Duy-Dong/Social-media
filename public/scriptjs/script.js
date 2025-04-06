@@ -41,6 +41,18 @@ function showDropdown(){
     else    drop.hidden=true;
     
 }
+function removeUnread(room,url,id){
+    const div = document.querySelector(`[roomIdHeader="${room}"]`);
+    const status= div.querySelector('.circle-unread');
+    if(status){  
+    console.log(status)
+    status.remove();
+    
+    axios.post(`${url}/updateUnread`,{
+        sender:id,
+        room:room
+    })}
+}
 function outGroup(roomId,home){
     Swal.fire({
         title: "Bạn có chắc muốn thoát nhóm",

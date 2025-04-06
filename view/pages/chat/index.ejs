@@ -3,21 +3,20 @@
         <div class="content col-10">
         <!-- Header -->
         <div class="header">
-            <div class="user-section" room-id="<%= room_id%>">
-                <div class="user-avatar"></div>
+            <div class="user-section" room-id="<%= room_id%>" user2_id="<%= user2._id%>">
+                <div class="user-avatar">
+                    <%if(user2.avatar){%>
+                        <img src="<%= user2.avatar%>" class="img-profile">
+                        <%}else{%>
+                            <svg class="discord-logo" viewBox="0 0 24 24">
+                            </svg>
+                          <%}%>
+                </div>
                 <span class="user-name"><%= user2.fullName %></span>
 
             </div>
 
-            <div class="icon-section">
-                <i class="fa fa-phone"></i>
-                <i class="fa fa-video-camera" aria-hidden="true"></i>
-    
-                <div class="search-container">
-                    <input type="text" placeholder="Search" class="search-input">
-                    <i class="fa fa-search"></i>
-                </div>
-            </div>
+            
         </div>
         
         <!-- COntent -->
@@ -31,7 +30,7 @@
                         <div class="message <%= user._id == item.sender ? 'right' : 'left' %>">
                             <div class="bubble">
                                 <%= item.content %>
-                                    <div class="time">20:06</div>
+                                    
                             </div>
                         </div>
                     
@@ -42,13 +41,15 @@
     
                 <form form-chat>
                     <div class="chat-footer">
-                        <input id="input-chat" type="text" placeholder="Nhập tin nhắn..."
-                            style="flex: 1; padding: 5px;">
+                        <input id="input-chat" type="text" placeholder="message..."
+                            style="flex: 1; padding: 5px;" onclick="removeUnread(`<%= room_id%>`,`<%= home %>/chat`,`<%= user._id %>`)">
                         <div class="custom-file-container" data-upload-id="upload-img"></div>
                         <label for="file-upload-with-preview-upload-img">
                             <i class="fa fa-picture-o" aria-hidden="true" role="button" type="button"></i>
                         </label>
-                        <button type="submit">Gửi</button>
+                        <button type="submit" class="button-send-mes">
+                            <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                        </button>
                     </div>
                 </form>
             </div>

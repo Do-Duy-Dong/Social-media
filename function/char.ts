@@ -4,9 +4,17 @@ import room from "../models/room.model";
 import User from "../models/user.model";
 import uploadImg from "../middleware/uploadImg";
 import { home } from "../config/home";
+import { Socket } from "socket.io";
 const userOnline: Object = {};
 export const chatSocket = () => {
     const chatNamspace = global.__chat.of("/chat");
+    const noticeNamespace=global.__chat.of('/notification');
+    
+    noticeNamespace.on('connection',socket=>{
+        socket.on('join',data=>{
+            socket.join(data.room);
+        })
+    })
     chatNamspace.on("connection", socket => {
         socket.on("join", room => {
             socket.join(room.room);
@@ -16,15 +24,19 @@ export const chatSocket = () => {
                 var images: string[] = await Promise.all(
                     data.img.map(async ele => await uploadImg(ele))
                 );
-                const chat = new Chat({
-                    sender: data.sender,
-                    content: data.msg,
-                    myName:data.myName,
-                    images: images,
-                    room_chat_id: data.room_id
-                });
-                await chat.save();
-
+                // const chat = new Chat({
+                //     sender: data.sender,
+                //     content: data.msg,
+                //     myName:data.myName,
+                //     images: images,
+                //     room_chat_id: data.room_id
+                // });
+                // await chat.save();
+                await room.updateOne({_id:data.room_id},{lastMess:{
+                    sender:data.sender,
+                    another_read:false,
+                    updateAt:Date.now()
+                }});
                 const newUser= await User.findOne({_id:data.sender}).select('id fullName');
                 chatNamspace.to(data.room_id).emit("server-send-back", {
                     msg: data.msg,
@@ -32,6 +44,11 @@ export const chatSocket = () => {
                     sender: data.sender,
                     myName:data.myName
                 })
+                
+                noticeNamespace.to(data.receiver).emit('server-send-notice',{
+                    room_id:data.room_id
+                })
+            
             } catch (error) {
                 console.log(error);
             }
@@ -164,7 +181,7 @@ export const friendSocket = async () => {
         })
     })
 }
-// Socket thực chất là chỉ khi tại trang của mình có emit từ server or client thì mới gọi đến on, ko thì sữ ko tự tiện nhận emit từ nơi kahcs
+// Socket thực chất là chỉ khi tại trang của mình có emit phia client thì server mới gọi đến on tương ứng với client đấy, ko thì sữ ko tự tiện nhận emit từ nơi kahcs
 export const onlineSocket = async () => {
     const onlineNamspace = global.__chat.of("/online");
     onlineNamspace.on("connection", socket => {
@@ -190,7 +207,7 @@ export const onlineSocket = async () => {
         const user = await User.findOne({ _id: id });
         const arr = user.friendList;
         const listOnline = arr.filter(item => userOnline[item]);
-        const listUser = await User.find({ _id: { $in: listOnline } }).select("id fullName");
+        const listUser = await User.find({ _id: { $in: listOnline } }).select("id fullName avatar");
         if (type == 'online') {
             onlineNamspace.to(id).emit("userOnline", {
                 arr: listUser,

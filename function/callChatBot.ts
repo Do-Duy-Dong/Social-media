@@ -14,7 +14,7 @@ export default async function callHuggingFaceAPI(history) {
             }
         }, {
             headers: {
-                'Authorization': `Bearer ${API_TOKEN}`,
+                'Authorization': `Bearer ${process.env.HUGGINGFACE_API}`,
                 'Content-Type': 'application/json'
             }
         });

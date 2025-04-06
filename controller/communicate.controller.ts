@@ -9,10 +9,12 @@ export const index = async (req: Request, res: Response): Promise<void> => {
     
     const id: string = req.params.id;
     const chats = await Chat.find({ room_chat_id: id });
-    const user = await User.findOne({ tokenUser: req.cookies.tokenUser }).select('id fullName');
 
-    const rooms = await room.findOne({ _id: id });
-    const another = rooms.user.find(item => item.user_id != user._id.toString());
+    var roomTemp = await room.findOne({ _id: id });
+    if(roomTemp.lastMess.sender!=global.myUser._id.toString() && !roomTemp.lastMess.another_read){
+        await room.updateOne({_id:id},{'lastMess.another_read':true});
+    }
+    const another = roomTemp.user.find(item => item.user_id != global.myUser._id.toString());
     const user2=await User.findOne({_id:another.user_id}).select('id fullName avatar');
     res.render("pages/chat/index.ejs", {
         chat: chats,
@@ -20,6 +22,16 @@ export const index = async (req: Request, res: Response): Promise<void> => {
         user2: user2
     });
 }
+
+export const updateUnread = async (req: Request, res: Response): Promise<void> => {
+    try {
+        await room.updateOne({_id:req.body.room},{'lastMess.another_read':true});
+    } catch (error) {
+        
+    }
+}
+
+
 export const getRoom = async (req: Request, res: Response): Promise<void> => {
     const { my_id, another_id } = req.body;
     await room.updateOne(
@@ -32,6 +44,7 @@ export const getRoom = async (req: Request, res: Response): Promise<void> => {
     });
 
 }
+
 export const chatBot = async (req: Request, res: Response): Promise<void> => {
     const room_id = req.params.id;
     var history = ``;
@@ -40,15 +53,14 @@ export const chatBot = async (req: Request, res: Response): Promise<void> => {
     chatbotNamespace.once('connection', socket => {
         socket.join(room_id);
         socket.on('question-user', async data => {
-            
             chatbotNamespace.to(room_id).emit('bot-sendback', data);
             history += ` User: ${data.msg}\nAssistant:`;
-            // const message= await callHuggingFaceAPI(history);
-            // history+=` ${message}\n`;
-            // chatbotNamespace.to(room_id).emit('bot-sendback', {
-            //     msg:message,
-            //     sender:'Bot'
-            // });
+            const message= await callHuggingFaceAPI(history);
+            history+=` ${message}\n`;
+            chatbotNamespace.to(room_id).emit('bot-sendback', {
+                msg:message,
+                sender:'Bot'
+            });
             
     });
 });
@@ -56,16 +68,12 @@ export const chatBot = async (req: Request, res: Response): Promise<void> => {
         chat: chats
     })
 }
+
 export const groupChat = async (req: Request, res: Response): Promise<void> => {
-    const user = await User.findOne({ tokenUser: req.cookies.tokenUser }).select('id fullName');
-    const roomGroup = await room.find({
-        type: 'Group Chat',
-        'user.user_id': user._id.toString()
-    });
     res.render("pages/group/index.ejs", {
-        roomGr: roomGroup
     })
 }
+
 export const groupChatPost = async (req: Request, res: Response): Promise<void> => {
     const user = await User.findOne({ tokenUser: req.cookies.tokenUser }).select('id fullName');
     const newRoom = new room(
@@ -81,28 +89,26 @@ export const groupChatPost = async (req: Request, res: Response): Promise<void> 
     await newRoom.save();
     res.redirect(`${home()}/chat/groupChat`);
 }
-export const chatRoom = async (req: Request, res: Response): Promise<void> => {
-    const user = await User.findOne({ tokenUser: req.cookies.tokenUser }).select('id fullName friendList');
 
-    const roomGroup = await room.find({
-        type: 'Group Chat',
-        'user.user_id': user._id.toString()
-    });
+
+export const chatRoom = async (req: Request, res: Response): Promise<void> => {
+
     const newRoom = await room.findOne({ _id: req.params.id });
 
     var arr: string[] = newRoom.user.map(item => item.user_id);
-    const listInvite: string[] = user.friendList.filter(item => !arr.includes(item));
+    const listInvite: string[] = global.myUser.friendList.filter(item => !arr.includes(item));
     const users = await User.find({ _id: { $in: listInvite } }).select("id fullName avatar");
 
     const chat = await Chat.find({ room_chat_id: newRoom._id.toString() });
     res.render("pages/group/chat.ejs", {
-        roomGr: roomGroup,
         newRoom: newRoom,
         chat: chat,
         friendList: users
     });
 
 }
+
+
 export const outGroup = async (req: Request, res: Response): Promise<void> => {
     try {
         await room.updateOne({ _id: req.body.room_id }, {
