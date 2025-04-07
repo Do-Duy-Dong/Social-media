@@ -43,7 +43,7 @@
                                     </div>
                                 <%}%>
                                 
-                                <% } else if(item.images.length>0){%>
+                                <% }if(item.images.length>0){%>
                                     <% for(let img of item.images){%>
                                         <div class="message <%= user._id == item.sender ? 'right' : 'left' %>">
                                             <div class="item-content">
@@ -73,7 +73,9 @@
                             <label for="file-upload-with-preview-upload-img">
                                 <i class="fa fa-picture-o" aria-hidden="true" role="button" type="button"></i>
                             </label>
-                            <button type="submit">Gửi</button>
+                            <button type="submit" class="button-send-mes">
+                                <i class="fa fa-paper-plane" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </form>
                 </div>

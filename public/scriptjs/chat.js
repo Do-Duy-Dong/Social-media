@@ -91,6 +91,18 @@ chatSocket.on("server-send-back", data => {
     }
     if (data.img.length > 0) {
         data.img.forEach(item => {
+            if(data.sender==my_id){
+                htmlImg+= `
+                <div class="item-content">
+                <div style='max-width: 200px;   
+                            object-fit: contain;
+                            padding: 5px;
+                            '>
+                <img src="${item}" alt="" style='width:100%;height:100%'>
+                </div>
+                </div>
+            `;
+            }else{
             htmlImg += `
             <div class="item-content">
                 <div class="myName">${data.myName}</div>
@@ -104,7 +116,7 @@ chatSocket.on("server-send-back", data => {
         `
         ;
 
-        })
+     }})
         div2.innerHTML = htmlImg;
         messageChat.appendChild(div2);
         window.upload.resetPreviewPanel();
