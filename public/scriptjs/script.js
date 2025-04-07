@@ -125,3 +125,8 @@ if(formLogins){
         }
 
     })}
+
+const chatContainer = document.querySelector('.chat-content');
+if (chatContainer) {
+    chatContainer.scrollTop = chatContainer.scrollHeight;
+}

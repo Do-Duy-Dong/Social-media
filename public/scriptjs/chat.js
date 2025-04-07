@@ -319,7 +319,11 @@ onlineSocket.on("userOnline", data => {
                 
                 body.innerHTML = `
                     <div class="row" user_id="${onlineFr._id}">
-                            <i class="fa fa-user col-1" aria-hidden="true"></i>
+                            <div class="avatar">
+                            ${onlineFr.avatar?`<img src="${onlineFr.avatar}" class="img-profile">`:'<svg class="discord-logo" viewBox="0 0 24 24"></svg>'}
+                        
+                                <div class="status-indicator2 green-back"></div>
+                            </div>
                             <div class="friend-name col-9">
                                 <div class="" style="font-size: 1.1rem;color: white;;">${onlineFr.fullName}</div>
                                 <div class="" style="font-size: 0.9rem;">Online</div>
