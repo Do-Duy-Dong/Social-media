@@ -2,6 +2,7 @@ import Social from "../models/social.model";
 import User from "../models/user.model";
 import { Request, Response } from "express";
 import search from "../function/search";
+import room from "../models/room.model";
 export const friend = async (req: Request, res: Response): Promise<void> => {
     const record = await User.findOne({ tokenUser: req.cookies.tokenUser }).select("friendList");
     const ids:Array<string> = record.friendList;
@@ -45,7 +46,5 @@ export const addFriend = async (req: Request, res: Response): Promise<void> => {
 export const onlineFriend = async (req: Request, res: Response): Promise<void> => {
     res.render("pages/chat/onlineFr.ejs",{})
 }
-export const call = async (req: Request, res: Response): Promise<void> => {
-    // res.render("pages/chat/call.ejs",{})
-}
+
 

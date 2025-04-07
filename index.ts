@@ -15,7 +15,6 @@ const upload=multer();
 const app:Express = express();
 // set up socket
 import http from "http"; 
-import { call } from "./controller/social.controller";
 
 
 const server= http.createServer(app);

@@ -88,7 +88,7 @@ export const friendSocket = async () => {
 
         // accept or refuse request
         socket.on("resultReq-to-server", async data => {
-            if (data.type = "accept") {
+            if (data.type == "accept") {
                 await User.updateOne({ _id: data.my_id }, {
                     $push: { friendList: data.another_id },
                     $pull: { requestedF: { user_id: data.another_id } }
@@ -115,13 +115,17 @@ export const friendSocket = async () => {
                     fullName: item.fullName,
                 }));
 
-
-                const record = new room({
-                    type: 'Chat Friend',
-                    user: newUsers,
-                    status: 'Not'
-                });
-                await record.save();
+                const checkRoom= await room.findOne({type:'Chat Friend',"user.user_id":{$all:[newUsers[0].user_id,newUsers[1].user_id]}}).select('id');
+                console.log(checkRoom);
+                if(!checkRoom){
+                    const record = new room({
+                        type: 'Chat Friend',
+                        user: newUsers,
+                        status: 'Not'
+                    });
+                    await record.save();
+                }
+                
             } else {
 
                 await User.updateOne({ _id: data.my_id }, {

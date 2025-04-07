@@ -182,7 +182,7 @@ friendSocket.on("server-send-friend", data => {
 
                         </a>
                         <a class="circle-back">
-                            <i class="fa fa-ellipsis-v " aria-hidden="true"></i>
+                            <i class="fa fa-times " aria-hidden="true"></i>
                         </a>
 
                     </div>
