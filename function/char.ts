@@ -24,14 +24,14 @@ export const chatSocket = () => {
                 var images: string[] = await Promise.all(
                     data.img.map(async ele => await uploadImg(ele))
                 );
-                // const chat = new Chat({
-                //     sender: data.sender,
-                //     content: data.msg,
-                //     myName:data.myName,
-                //     images: images,
-                //     room_chat_id: data.room_id
-                // });
-                // await chat.save();
+                const chat = new Chat({
+                    sender: data.sender,
+                    content: data.msg,
+                    myName:data.myName,
+                    images: images,
+                    room_chat_id: data.room_id
+                });
+                await chat.save();
                 await room.updateOne({_id:data.room_id},{lastMess:{
                     sender:data.sender,
                     another_read:false,
@@ -246,3 +246,7 @@ export const callSocket = async () => {
     });
 
 }
+var as:unknown;
+as=123;
+
+console.log(as as number +1);

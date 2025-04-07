@@ -93,12 +93,12 @@ chatSocket.on("server-send-back", data => {
         data.img.forEach(item => {
             htmlImg += `
             <div class="item-content">
-                <div class="myName"><%= item.myName%></div>
+                <div class="myName">${data.myName}</div>
                 <div style='max-width: 200px;   
                             object-fit: contain;
                             padding: 5px;
                             '>
-                <img src="<%= img%>" alt="" style='width:100%;height:100%'>
+                <img src="${item}" alt="" style='width:100%;height:100%'>
             </div>
             </div>
         `
@@ -352,36 +352,4 @@ onlineSocket.on("userOnline", data => {
 })
 
 
-// `<div class="friend-item-inviteGr" style="border-top: 1px solid #454545;" user-friend-all="${onlineFr._id}">
-//                                     <div class="friend-info col-9" friend-invite-group>
-//                                         <div class="avatar">
-                                            
-//                                                 <img src="<%= onlineFr.avatar%>" class="img-profile">
-//                                                 <div class="status-indicator2"></div>
-//                                         </div>
-//                                         <div class="" style="font-size: 1.1rem;color: white;;">
-//                                             <span>
-//                                                 ${onlineFr.fullName}
-//                                             </span>
-//                                             <div class="statusFr" style="font-size: 0.9rem;color: #999;">Online</div>
-//                                         </div>
-                                        
-//                                     </div>
-//                                     <div class="col-2" style="
-//                                                     display: flex;
-//                                                     justify-content: space-evenly;
-//                                                     text-align: center;
-//                                                     align-items: center;
-                                                    
-//                                                 ">
-//                                             <a class="circle-back" role="button"
-//                                                 onclick="chatFr('<%= item._id%>','<%= home%>')">
-//                                                 <i class="fa fa-comment " aria-hidden="true"></i>
-
-//                                             </a>
-//                                             <a class="circle-back" role="button" onclick="deleteFriend()">
-//                                                 <i class="fa fa-user-times" aria-hidden="true"></i>
-//                                             </a>
-
-//                                         </div>
-//                                 </div>`
+                               
