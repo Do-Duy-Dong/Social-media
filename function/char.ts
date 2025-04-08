@@ -97,18 +97,18 @@ export const friendSocket = async () => {
                     $push: { friendList: data.my_id },
                     $pull: { sendReqF: { user_id: data.my_id } }
                 });
-
-                const users = await User.find({
+                interface newUser {
+                    user_id: string;
+                    fullName: string;
+                }
+                const users= await User.find({
                     $or: [
                         { _id: data.another_id },
                         { _id: data.my_id }
                     ]
                 }
                 ).select("_id fullName");
-                interface newUser {
-                    user_id: string;
-                    fullName: string;
-                }
+                
 
                 const newUsers: newUser[] = users.map((item) => ({
                     user_id: item._id.toString(),
@@ -116,12 +116,14 @@ export const friendSocket = async () => {
                 }));
 
                 const checkRoom= await room.findOne({type:'Chat Friend',"user.user_id":{$all:[newUsers[0].user_id,newUsers[1].user_id]}}).select('id');
-                console.log(checkRoom);
                 if(!checkRoom){
                     const record = new room({
                         type: 'Chat Friend',
                         user: newUsers,
-                        status: 'Not'
+                        status: 'Not',
+                        lastMess:{
+                            another_read:true
+                        }
                     });
                     await record.save();
                 }

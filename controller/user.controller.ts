@@ -43,7 +43,6 @@ export const registerPost =async (req:Request,res:Response):Promise<void>=>{
     try{
         const {email,fullName,password,confirmPass}= req.body;
         const user = await User.findOne({email:email});
-        console.log()
         if(user || password != confirmPass){
             res.status(400).json("Lỗi");
             return;

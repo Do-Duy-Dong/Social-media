@@ -16,10 +16,15 @@ export const index=async (req:Request,res:Response):Promise<void>=>{
 
 }
 export const profile=async (req:Request,res:Response):Promise<void>=>{
-    const user= await User.findOne({tokenUser:req.cookies.tokenUser});
+    try {
+        const user= await User.findOne({tokenUser:req.cookies.tokenUser});
     res.render("pages/home/profile",{
         user:user
     });
+    } catch (error) {
+        
+    }
+    
 }
 export const profilePost=async (req:Request,res:Response):Promise<void>=>{
     try {

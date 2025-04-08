@@ -3,11 +3,16 @@ import room from "../models/room.model";
 import User from "../models/user.model";
 
 export default async function (req:Request,res:Response,next:NextFunction): Promise<void> {
+    try {
+        const roomGroup = await room.find({
+            type: 'Group Chat',
+            'user.user_id': global.myUser._id.toString()
+        });
+        res.locals.roomGr=roomGroup;
+        next();
+    } catch (error) {
+        res.redirect(`back`); 
+    }
     
-    const roomGroup = await room.find({
-        type: 'Group Chat',
-        'user.user_id': global.myUser._id.toString()
-    });
-    res.locals.roomGr=roomGroup;
-    next();
+   
 }
